@@ -24,15 +24,21 @@ cache:
 
 language: java
 
-env:
+matrix:
+  include:
   # TODO: JDK6 does not react well to concurrent usage of in-process javac as used by zinc, so
   # we limit concurrency there.
-  - JDK=openjdk6   WORKERS=1
-  - JDK=openjdk7   WORKERS=6
-  - JDK=oraclejdk7 WORKERS=6
-  - JDK=oraclejdk8 WORKERS=6
+  - jdk: openjdk6
+    env: WORKERS=1
+  - jdk: openjdk7
+    env: WORKERS=6
+  - jdk: oraclejdk7
+    env: WORKERS=6
+  - jdk: oraclejdk8
+    env: WORKERS=6
+  - jdk: openjdk11
+    env: WORKERS=6
 
 script: |
-  jdk_switcher use ${JDK}
   ./pants --compile-zinc-worker-count=${WORKERS} doc test ::
 
